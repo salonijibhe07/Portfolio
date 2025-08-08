@@ -48,6 +48,8 @@ export default function AcademicPortfolio() {
   const [showContactPage, setShowContactPage] = useState(false)
   const [showMediaPage, setShowMediaPage] = useState(false)
   const [year, setYear] = useState<number | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
 
 useEffect(() => {
   setYear(new Date().getFullYear())
@@ -98,47 +100,95 @@ useEffect(() => {
   }
 
   return (
-<div className="min-h-screen bg-gradient-to-br from-purple-100 via-purple-300 to-purple-400">
-      {/* Fixed Navigation Header */}
+  <div className="min-h-screen bg-gradient-to-br from-purple-100 via-purple-300 to-purple-400">
+    {/* Fixed Navigation Header */}
     <header className="fixed top-0 w-full bg-gradient-to-r from-purple-400 to-purple-900 text-white shadow-xl z-50 border-b border-purple-800">
-  <div className="container mx-auto px-6 py-2">
-    <div className="flex items-center justify-between">
-      {/* Logo and Title */}
-      <div className="flex items-center space-x-4">
-        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-md hover:scale-105 transition-transform duration-300">
-          <span className="text-purple-700 font-bold text-lg">AI</span>
-        </div>
-        <div>
-          <h1 className="font-extrabold text-white text-xl tracking-wide">Dr. Anup Ingle</h1>
-          <p className="text-sm text-white-200 font-medium">Assistant Professor • E&TC Department</p>
+      <div className="container mx-auto px-6 py-2">
+        <div className="flex items-center justify-between">
+          {/* Logo and Title */}
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-md hover:scale-105 transition-transform duration-300">
+              <span className="text-purple-700 font-bold text-lg">AI</span>
+            </div>
+            <div>
+              <h1 className="font-extrabold text-white text-xl tracking-wide">Dr. Anup Ingle</h1>
+              <p className="text-sm text-white/80 font-medium">
+                Assistant Professor • E&TC Department
+              </p>
+            </div>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-3">
+            {[
+              { id: "home", label: "Home" },
+              { id: "about", label: "About" },
+              { id: "academic", label: "Academic" },
+              { id: "contact", label: "Contact" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => scrollToSection(tab.id)}
+                className={`px-5 py-2 rounded-xl font-semibold transition-all duration-300 text-sm shadow-sm
+                  ${
+                    activeSection === tab.id
+                      ? "bg-white text-purple-700 scale-105 shadow-md"
+                      : "text-white/90 hover:bg-purple-300 hover:text-black hover:scale-105"
+                  }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Mobile Hamburger */}
+          <div className="md:hidden">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="hidden md:flex space-x-3">
-        {[
-          { id: "home", label: "Home" },
-          { id: "about", label: "About" },
-          { id: "academic", label: "Academic" },
-          { id: "contact", label: "Contact" },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => scrollToSection(tab.id)}
-            className={`px-5 py-2 rounded-xl font-semibold transition-all duration-300 text-sm shadow-sm
-              ${
-                activeSection === tab.id
-                  ? "bg-white text-purple-700 scale-105 shadow-md"
-                  : "text-white/90 hover:bg-purple-300 hover:text-black hover:scale-105"
-              }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </nav>
-    </div>
-  </div>
-</header>
+      {/* Mobile Sidebar Menu */}
+      {mobileMenuOpen && (
+       <div className="fixed top-16 right-2 w-48 sm:w-56 bg-purple-600 shadow-lg z-50 rounded-xl overflow-hidden transition-transform duration-300">
+  {/* Menu Links */}
+  <nav className="flex flex-col space-y-2 px-6 pt-3 pb-3">
+            {[
+              { id: "home", label: "Home" },
+              { id: "about", label: "About" },
+              { id: "academic", label: "Academic" },
+              { id: "contact", label: "Contact" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => scrollToSection(tab.id)}
+                className={`py-2 text-left font-semibold transition-all duration-300
+                  ${
+                    activeSection === tab.id
+                      ? "bg-white text-purple-700 px-3 rounded"
+                      : "text-white/90 hover:bg-purple-300 hover:text-black px-3 rounded"
+                  }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      )}
+    </header>
+
+
+
 
 
       {/* Main Content - All sections on same page */}
@@ -1089,35 +1139,7 @@ function PublicationsContent() {
   return (
     
     <div className="flex gap-6">
-      {/* Left Sidebar - Year Filter */}
-      {/* <div className="w-32 flex-shrink-0">
-        <Card className="shadow-lg border-purple-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold">Filter by Year</CardTitle>
-          </CardHeader>
-          <CardContent className="p-3">
-            <div className="space-y-2">
-              {years.map((year) => (
-                <button
-                  key={year}
-                  onClick={() => {
-                    setSelectedYear(year)
-                    setCurrentPage(1)
-                  }}
-                  className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-200 ${
-                    selectedYear === year
-                      ? "bg-purple-500 text-white shadow-md"
-                      : "bg-purple-50 text-slate-600 hover:bg-purple-100"
-                  }`}
-                >
-                  {year === "all" ? "All Years" : year}
-                </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div> */}
-
+      
       {/* Main Content */}
       <div className="flex-1">
         <div className="flex items-center justify-between mb-6">
@@ -1323,34 +1345,7 @@ function BooksContent() {
 
   return (
     <div className="flex gap-6">
-      {/* Left Sidebar - Year Filter
-      <div className="w-32 flex-shrink-0">
-        <Card className="shadow-lg border-purple-200">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold">Filter by Year</CardTitle>
-          </CardHeader>
-          <CardContent className="p-3">
-            <div className="space-y-2">
-              {years.map((year) => (
-                <button
-                  key={year}
-                  onClick={() => {
-                    setSelectedYear(year)
-                    setCurrentPage(1)
-                  }}
-                  className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-200 ${
-                    selectedYear === year
-                      ? "bg-purple-500 text-white shadow-md"
-                      : "bg-purple-50 text-slate-600 hover:bg-purple-100"
-                  }`}
-                >
-                  {year === "all" ? "All Years" : year}
-                </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div> */}
+      
 
       {/* Main Content */}
       <div className="flex-1">
